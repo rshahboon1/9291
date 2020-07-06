@@ -1,21 +1,44 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Root } from "native-base";
+import * as Font from "expo-font";
+import { AppLoading } from "expo";
+import { createSwitchNavigator, createAppContainer } from "react-navigation";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working onur app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import HomeScreen from "./app/screens/Home/Home";
+import LandingScreen from "./app/screens/Landing/Landing";
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { loading: true };
+  }
+  async componentDidMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    });
+    this.setState({ loading: false });
+  }
+  render() {
+    if (this.state.loading) {
+      return (
+        <Root>
+          <AppLoading />
+        </Root>
+      );
+    } else {
+      return (
+        <Root>
+          <AppContainer />
+        </Root>
+      );
+    }
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+const AppSwitchNavigator = createSwitchNavigator({
+  Landing: { screen: LandingScreen },
+  Home: { screen: HomeScreen },
 });
+const AppContainer = createAppContainer(AppSwitchNavigator);
