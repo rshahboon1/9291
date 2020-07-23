@@ -85,7 +85,7 @@ class DrawerPannel extends Component {
           <Button
             transparent
             style={{ justifyContent: "flex-end" }}
-            onPress={(_) => this.props.navigation.navigate("History")}
+            onPress={(_) => this.props.navigation.navigate("Privacy")}
           >
             <Text style={styles.listBtnTxt}>شروط الاستخدام</Text>
             <Icon

@@ -14,13 +14,15 @@ import {
 } from "native-base";
 import { createStackNavigator } from "react-navigation-stack";
 import Drawer from "react-native-drawer";
-
+import Contacts from "../../classes/Contacts/Contacts";
 import Globals from "../../../Globals";
 import Results from "../Results/Results";
 import Vip from "../Vip/Vip";
 import DrawerPannel from "../DrawerPannel/DrawerPannel";
 import History from "../History/History";
 import Privacy from "../Privacy/Privacy";
+import Search from "../../classes/Search/Search";
+import Validation from "../../classes/validation/index";
 class Home extends Component {
   static navigationOptions = {
     headerStyle: {
@@ -28,6 +30,11 @@ class Home extends Component {
       display: "none",
     },
   };
+  constructor(props) {
+    super(props);
+    const search = new Search({ phoneNumber: "0926548523" });
+    this.state.search = search;
+  }
   closeControlPanel = () => {
     this._drawer.close();
   };
@@ -37,7 +44,34 @@ class Home extends Component {
   state = {
     nameSearch: false,
   };
-
+  search = async () => {
+    !this.state.nameSearch ? this.searchByNumber() : this.searchByName();
+  };
+  searchByName() {
+    console.log("serach by name");
+  }
+  searchByNumber() {
+    console.log("serach by Number");
+  }
+  async UNSAFE_componentWillMount() {
+    let c = new Contacts();
+    // c.getLastTimeContactUpload();
+    // alert();
+    // c.uploadContacts();//TODO  add later in case production
+    this.state.search.searchForPhone();
+    // console.log("+++++++++++++++++++++++++");
+    // console.log(this.state.search, "the search test class");
+  }
+  async handleChange(phonenumberOrName) {
+    if (!this.state.nameSearch) {
+      if (phonenumberOrName.length != 11) this.setState({ phonenumberOrName });
+      if (Validation.rightPhoneNumber(phonenumberOrName)) {
+        this.setState({ visibleSearchAlert: true });
+      }
+    } else {
+      this.setState({ phonenumberOrName });
+    }
+  }
   render() {
     return (
       <Drawer
@@ -145,7 +179,7 @@ class Home extends Component {
                   paddingVertical: 3,
                   // paddingHorizontal: 8,
                 }}
-                onPress={() => this.props.navigation.navigate("Results")}
+                onPress={() => this.search()}
               >
                 <Icon
                   name="ios-search"
@@ -154,7 +188,45 @@ class Home extends Component {
                   }}
                 />
               </Button>
-              <Input placeholder="ادخل رقم الهاتف" />
+              {/* <Input placeholder="ادخل رقم الهاتف" /> */}
+              {!this.state.nameSearch && (
+                <Input
+                  // onChangeText={(phonenumberOrName) => this.setState({phonenumberOrName})}
+                  onChangeText={(Text) => {
+                    this.handleChange(Text);
+                  }}
+                  value={this.state.phonenumberOrName}
+                  keyboardType={"numeric"}
+                  placeholder={
+                    this.state.nameSearch ? "مثال : محمد علي " : "0926543210"
+                  }
+                  multiline={true}
+                  returnKeyType="search"
+                  // returnKeyLabel='ارسال'
+                  // onKeyPress={_ => alert()}
+                  onSubmitEditing={(_) => this._search()}
+                  // keyboardType={'web-search'}
+                />
+              )}
+              {this.state.nameSearch && (
+                <Input
+                  // onChangeText={(phonenumberOrName) => this.setState({phonenumberOrName})}
+                  onChangeText={(Text) => {
+                    this.handleChange(Text);
+                  }}
+                  multiline={true}
+                  value={this.state.phonenumberOrName}
+                  keyboardType={"default"}
+                  placeholder={
+                    this.state.nameSearch ? "مثال : محمد علي" : "0926543210"
+                  }
+                  returnKeyType="search"
+                  // returnKeyLabel='ارسال'
+                  // onKeyPress={_ => alert()}
+                  onSubmitEditing={(_) => this._search()}
+                  // keyboardType={'web-search'}
+                />
+              )}
               {/* <Icon name="ios-people" /> */}
             </Item>
           </Header>

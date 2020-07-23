@@ -2,9 +2,26 @@ import React from "react";
 import { View, Text } from "react-native";
 import Global from "../../../Globals";
 import { Button, Icon } from "native-base";
+import Contacts from "react-native-contacts";
 
 export default function ResultCard(props) {
   const { name, phone, repeat } = props;
+  const saveContactToPhone = (name, phone) => {
+    var newPerson = {
+      phoneNumbers: [
+        {
+          label: "mobile",
+          number: phone,
+        },
+      ],
+      displayName: name,
+    };
+
+    Contacts.openContactForm(newPerson, (err, contact) => {
+      if (err) throw err;
+      // contact has been saved
+    });
+  };
   return (
     <View
       style={{
@@ -18,7 +35,7 @@ export default function ResultCard(props) {
     >
       <View>
         <Button
-          onPress={(_) => alert("saved")}
+          onPress={() => saveContactToPhone(name, phone)}
           style={{
             backgroundColor: Global.colors.green2,
             borderRadius: 30,

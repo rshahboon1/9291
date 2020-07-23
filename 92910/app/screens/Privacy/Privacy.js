@@ -1,12 +1,55 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
+import {
+  Container,
+  Header,
+  Left,
+  Body,
+  Right,
+  Button,
+  Icon,
+  Title,
+  Item,
+  Input,
+} from "native-base";
+import Globals from "../../../Globals";
 
 export default class Privacy extends Component {
+  static navigationOptions = {
+    headerStyle: {
+      // backgroundColor: '#333',
+      display: "none",
+    },
+  };
+  constructor(props) {
+    super(props);
+    console.log();
+  }
   render() {
     return (
-      <View>
-        <Text> Privacy </Text>
-      </View>
+      <Container>
+        <Header style={{ backgroundColor: Globals.colors.pr2 }}>
+          <Left>
+            <Button
+              style={{ width: 50 }}
+              transparent
+              onPress={(_) => this.props.navigation.goBack()}
+            >
+              <Icon name="arrow-back" />
+            </Button>
+          </Left>
+          <Body
+            style={{
+              // backgroundColor: "red",
+              flex: 4,
+              alignItems: "center",
+            }}
+          >
+            <Title>شروط الاستخدام</Title>
+          </Body>
+          <Right style={{ flex: 1 }}></Right>
+        </Header>
+      </Container>
     );
   }
 }
