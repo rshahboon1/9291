@@ -66,9 +66,11 @@ export default function ResultCard(props) {
           </Text>
         </View>
         <View style={{ flexDirection: "row", marginTop: 3 }}>
-          <Text style={{ color: Global.colors.font3, textAlign: "right" }}>
-            التكرار :{repeat}
-          </Text>
+          {repeat && (
+            <Text style={{ color: Global.colors.font3, textAlign: "right" }}>
+              التكرار :{repeat}
+            </Text>
+          )}
           <Text style={{ color: Global.colors.font3, textAlign: "right" }}>
             {"    "}
             {phone}

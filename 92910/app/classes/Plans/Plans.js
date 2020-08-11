@@ -1,25 +1,22 @@
-import Storage from "../Storage/Storage";
 import Global from "../../../Globals";
 import Axios from "axios";
 
-export default class Search {
-  constructor({ phoneNumber, name, deviceId, encryptedId } = {}) {
+export default class Plans {
+  constructor({ cardOne, CardTwo, deviceId, encryptedId } = {}) {
+    this.cardOne = cardOne;
+    this.CardTwo = CardTwo;
     this.deviceId = deviceId;
-    this.phoneNumber = phoneNumber;
-    this.phoneNumberHistoryResult;
     this.encryptedId = encryptedId;
-
-    this.name = name;
-    this.historyTableName = "history";
   }
 
-  async searchForPhone(more = "phonefind") {
+  async activateSilver() {
     // alert(this.phoneNumber);
     // return;
 
-    if (!this.phoneNumber) return;
-    const endurl = `/app9291/v1/mobile/${more}?id=${this.deviceId}&phone=${this.phoneNumber}`;
+    if (!this.cardOne) return;
+    const endurl = `/app9291/v1/mobile/silvergold?id=${this.deviceId}&card1=${this.cardOne}`;
     const url = Global.site.url + Global.site.endPoint + endurl;
+
     // console.log(url);
     // return;
     // alert();
@@ -41,24 +38,14 @@ export default class Search {
         return { state: 201 };
       });
     console.log(result);
-    if (result.state == 200) {
-      this.phoneNumberHistoryResult = {
-        name: result.data.result[0].name,
-        phone: this.phoneNumber,
-      };
-      // console.log("the phone search");
-      // return;
-      const lS = new Storage(this.historyTableName);
-      await lS.saveToHistory(this.phoneNumberHistoryResult);
-    }
+
     return result;
   }
-
-  async searchForName(from = 0) {
-    // alert();
-    if (!this.name) return;
-    const endurl = `/app9291/v1/mobile/name?id=${this.deviceId}&name=${this.name}&from=${from}`;
+  async activateGold() {
+    if (!this.cardOne && !this.CardTwo) return;
+    const endurl = `/app9291/v1/mobile/silvergold?id=${this.deviceId}&card1=${this.cardOne}&card2=${this.CardTwo}`;
     const url = Global.site.url + Global.site.endPoint + endurl;
+
     // console.log(url);
     // return;
     // alert();

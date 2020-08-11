@@ -45,7 +45,12 @@ class DrawerPannel extends Component {
         >
           <Image
             source={logo}
-            style={{ width: 100, height: 100, marginBottom: 25 }}
+            style={{
+              width: 100,
+              height: 100,
+              marginBottom: 25,
+              borderRadius: 8,
+            }}
           />
           <Text>كاش الأرقام 9291</Text>
         </View>

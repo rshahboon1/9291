@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, Alert } from "react-native";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import logo from "../../assets/logo.png";
 import Global from "../../../Globals";
@@ -15,39 +15,47 @@ export default class Landing extends Component {
     this.state.loading = ldg;
   }
   async UNSAFE_componentWillMount() {
+    await this.state.loading.getDeviceId();
     const first = await this.state.loading.isFirstTimeUse();
     console.log(first);
     if (first) {
-      alert("yes");
       const registred = await this.state.loading.registerNewUser();
-      if (registred) {
+      // alert(registred["state"]);
+      // console.log(registred);
+      // return;
+      if (registred.state == 200) {
         // alert();
-        console.log("user registred succussfully ");
+        // console.log("user registred succussfully ");
         this.setState({
           progressWithOnComplete: this.state.progressWithOnComplete + 40,
         });
       } else {
+        alert("ناسف خطاء رقم 1 , يمكنك محاولة لاحقا");
         console.log("error regisstring the user try later");
       }
     } else {
-      alert("not first time ");
       this.setState({
         progressWithOnComplete: this.state.progressWithOnComplete + 40,
       });
     }
     const checkUpdate = await this.state.loading.checkUpdate();
-    if (checkUpdate) {
-      console.log("need update");
+    console.log(checkUpdate);
+    // return;
+    if (checkUpdate.state == 200) {
+      const { appNeedUpdate, noAds, theAd } = checkUpdate;
+      if (!appNeedUpdate) {
+        this.setState({
+          progressWithOnComplete: this.state.progressWithOnComplete + 50,
+        });
+        console.log("need update");
+      } else {
+        //TODO TAKE APP TO CONSOLE PAGE ON THE NEXT UPDATE
+        alert("يحتاج التطبيق الي تحديث ");
+      }
+      this.setState({ noAds, theAd });
     } else {
-      this.setState({
-        progressWithOnComplete: this.state.progressWithOnComplete + 50,
-      });
-
-      console.log("dont need update");
+      alert("ناسف خطاء رقم 2 , يمكنك محاولة لاحقا");
     }
-    setTimeout(() => {
-      // this.setState({ progressWithOnComplete: 100 });
-    }, 2000);
   }
   render() {
     return (

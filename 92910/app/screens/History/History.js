@@ -15,6 +15,8 @@ import {
 } from "native-base";
 import Globals from "../../../Globals";
 import ResultCard from "../../components/ResultCard/ResultCard";
+import Storage from "../../classes/Storage/Storage";
+import MyAds from "../../components/MyAds/MyAds";
 export default class History extends Component {
   static navigationOptions = {
     headerStyle: {
@@ -22,7 +24,15 @@ export default class History extends Component {
       display: "none",
     },
   };
-
+  state = {
+    history: [],
+  };
+  async UNSAFE_componentWillMount() {
+    const lS = new Storage("history");
+    const history = await lS.getFromHistory();
+    // this.state.history = data;
+    this.setState({ history });
+  }
   render() {
     return (
       <Container style={{ backgroundColor: Globals.colors.bg }}>
@@ -48,9 +58,13 @@ export default class History extends Component {
           <Right style={{ flex: 1 }}></Right>
         </Header>
         <Content padder>
-          <ResultCard name="رضوان" phone="0926548523" repeat="12" />
-          <ResultCard name="رضوان" phone="0926548523" repeat="12" />
-          <ResultCard name="رضوان" phone="0926548523" repeat="12" />
+          <MyAds theAd={false} />
+          {this.state.history.map(({ name, phone }, key) => {
+            console.log(name);
+            return (
+              <ResultCard key={key} name={name} phone={phone} repeat="12" />
+            );
+          })}
         </Content>
       </Container>
     );

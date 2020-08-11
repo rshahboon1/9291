@@ -17,12 +17,18 @@ import Drawer from "react-native-drawer";
 import Contacts from "../../classes/Contacts/Contacts";
 import Globals from "../../../Globals";
 import Results from "../Results/Results";
+import ResultsName from "../ResultsName/ResultsName";
+
 import Vip from "../Vip/Vip";
 import DrawerPannel from "../DrawerPannel/DrawerPannel";
 import History from "../History/History";
 import Privacy from "../Privacy/Privacy";
 import Search from "../../classes/Search/Search";
 import Validation from "../../classes/validation/index";
+import DeviceInfo from "react-native-device-info";
+import Encryption from "../../classes/Encryption/Encryption";
+import MyAds from "../../components/MyAds/MyAds";
+import Plan from "../../components/Plan/Plan";
 class Home extends Component {
   static navigationOptions = {
     headerStyle: {
@@ -32,8 +38,6 @@ class Home extends Component {
   };
   constructor(props) {
     super(props);
-    const search = new Search({ phoneNumber: "0926548523" });
-    this.state.search = search;
   }
   closeControlPanel = () => {
     this._drawer.close();
@@ -43,22 +47,80 @@ class Home extends Component {
   };
   state = {
     nameSearch: false,
+    phonenumberOrName: "",
+    viewGold: false,
   };
   search = async () => {
     !this.state.nameSearch ? this.searchByNumber() : this.searchByName();
   };
-  searchByName() {
-    console.log("serach by name");
+  async searchByName() {
+    if (this.state.phonenumberOrName == "") return;
+
+    const search = new Search({
+      name: this.state.phonenumberOrName,
+      deviceId: this.state.deviceId,
+      encryptedId: this.state.encryptedId,
+    });
+    const names = await search.searchForName();
+    if (names.state == 200) {
+      // console.log(names);
+      // return;
+      this.props.navigation.navigate("ResultsName", {
+        data: names,
+        name: this.state.phonenumberOrName,
+        deviceId: this.state.deviceId,
+        encryptedId: this.state.encryptedId,
+      });
+    } else {
+      if (names.state == 403) {
+        this.setState({ viewGold: true });
+        //TODO handle other sercomstancess
+      } else {
+        alert("نأسف لم نتمكن من العثور علي نتائج");
+      }
+    }
   }
-  searchByNumber() {
-    console.log("serach by Number");
+  async getDeviceId() {
+    const deviceId = await DeviceInfo.getUniqueId();
+    // alert(deviceId);
+    const encryptedId = await new Encryption().encrypt(deviceId);
+    // alert(encryptedId);
+    this.setState({ deviceId, encryptedId });
+  }
+
+  async searchByNumber(more = "phonefind") {
+    // console.log(Validation.rightPhoneNumber(this.state.phonenumberOrName));
+    // return;
+    if (!Validation.rightPhoneNumber(this.state.phonenumberOrName)) {
+      alert("ارجوا التأكد من الرقم");
+      return;
+    }
+
+    const search = new Search({
+      phoneNumber: this.state.phonenumberOrName,
+      deviceId: this.state.deviceId,
+      encryptedId: this.state.encryptedId,
+    });
+    const Results = await search.searchForPhone(more);
+    if (Results.state == 200) {
+      this.props.navigation.navigate("Results", {
+        data: Results,
+        phone: this.state.phonenumberOrName,
+        deviceId: this.state.deviceId,
+        encryptedId: this.state.encryptedId,
+      });
+    } else {
+      //TODO handle other sercomstancess
+      alert("نأسف لم نتمكن من العثور علي نتائج");
+    }
   }
   async UNSAFE_componentWillMount() {
+    await this.getDeviceId();
     let c = new Contacts();
     // c.getLastTimeContactUpload();
     // alert();
     // c.uploadContacts();//TODO  add later in case production
-    this.state.search.searchForPhone();
+    // this.state.search.searchForPhone();
     // console.log("+++++++++++++++++++++++++");
     // console.log(this.state.search, "the search test class");
   }
@@ -88,7 +150,14 @@ class Home extends Component {
         //   main: { opacity: (2 - ratio) / 2 },
         // })}
       >
-        <Container>
+        <Container
+          style={
+            {
+              // backgroundColor: "blue",
+              // flexDirection: "column-reverse"
+            }
+          }
+        >
           <Header style={{ backgroundColor: Globals.colors.pr2 }}>
             <Right></Right>
             <Body
@@ -109,7 +178,9 @@ class Home extends Component {
           <View style={{ flexDirection: "row" }}>
             <Button
               transparent
-              onPress={() => this.setState({ nameSearch: true })}
+              onPress={() =>
+                this.setState({ nameSearch: true, phonenumberOrName: "" })
+              }
               style={{
                 flex: 1,
                 justifyContent: "center",
@@ -131,7 +202,9 @@ class Home extends Component {
             </Button>
             <Button
               transparent
-              onPress={() => this.setState({ nameSearch: false })}
+              onPress={() =>
+                this.setState({ nameSearch: false, phonenumberOrName: "" })
+              }
               style={{
                 flex: 1,
                 justifyContent: "center",
@@ -198,7 +271,7 @@ class Home extends Component {
                   value={this.state.phonenumberOrName}
                   keyboardType={"numeric"}
                   placeholder={
-                    this.state.nameSearch ? "مثال : محمد علي " : "0926543210"
+                    this.state.nameSearch ? "مثال : احمد صبحي " : "0926543210"
                   }
                   multiline={true}
                   returnKeyType="search"
@@ -218,7 +291,7 @@ class Home extends Component {
                   value={this.state.phonenumberOrName}
                   keyboardType={"default"}
                   placeholder={
-                    this.state.nameSearch ? "مثال : محمد علي" : "0926543210"
+                    this.state.nameSearch ? "مثال : احمد صبحي" : "0926543210"
                   }
                   returnKeyType="search"
                   // returnKeyLabel='ارسال'
@@ -230,6 +303,38 @@ class Home extends Component {
               {/* <Icon name="ios-people" /> */}
             </Item>
           </Header>
+          {this.state.viewGold && (
+            <View
+              style={{
+                // backgroundColor: "red",
+                position: "absolute",
+                height: "100%",
+                width: "100%",
+                zIndex: 999,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Plan
+                close={(_) => this.setState({ viewGold: false })}
+                navigation={this.props.navigation}
+                type="gold"
+                deviceId={this.state.deviceId}
+                encryptedId={this.state.encryptedId}
+              />
+            </View>
+          )}
+          <View
+            style={{
+              paddingBottom: 8,
+              flexDirection: "column",
+              flex: 1,
+              width: "100%",
+              justifyContent: "flex-end",
+            }}
+          >
+            <MyAds theAd={false} />
+          </View>
         </Container>
       </Drawer>
     );
@@ -252,6 +357,9 @@ const homeStack = createStackNavigator({
   },
   Results: {
     screen: Results,
+  },
+  ResultsName: {
+    screen: ResultsName,
   },
   Vip: {
     screen: Vip,

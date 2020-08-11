@@ -10,6 +10,7 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.3",
     "@react-native-community/masked-view": "^0.1.10",
+    "axios": "^0.19.2",
     "expo": "~38.0.1",
     "expo-splash-screen": "~0.3.1",
     "expo-status-bar": "^1.0.0",
@@ -20,6 +21,7 @@
     "react-dom": "~16.11.0",
     "react-native": "~0.62.2",
     "react-native-contacts": "^5.0.4",
+    "react-native-crypto-js": "^1.0.0",
     "react-native-device-info": "^5.3.1",
     "react-native-drawer": "^2.5.1",
     "react-native-gesture-handler": "~1.6.1",

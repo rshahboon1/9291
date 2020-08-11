@@ -11,4 +11,11 @@ export default class Global {
     font3: "#777",
     bg: "#f3f3f3",
   };
+  static site = {
+    url: "http://192.168.0.6",
+    endPoint: "/work/wpphonelibya/index.php/wp-json",
+  };
+  static app = {
+    debuging: true,
+  };
 }

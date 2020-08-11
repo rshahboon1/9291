@@ -15,6 +15,7 @@ import {
 import silver from "../../assets/2.png";
 import gold from "../../assets/1.png";
 import Global from "../../../Globals";
+import Plans from "../../classes/Plans/Plans";
 
 export default class Vip extends Component {
   static navigationOptions = {
@@ -23,10 +24,67 @@ export default class Vip extends Component {
       display: "none",
     },
   };
+  state = {
+    card1: "",
+    card2: "",
+  };
   UNSAFE_componentWillMount() {
+    const { deviceId, encryptedId, type } = this.props.navigation.state.params;
     this.setState({
-      type: this.props.navigation.state.params.type,
+      type,
+      deviceId,
+      encryptedId,
     });
+  }
+  handleActivation = async () => {
+    if (this.state.type == "gold") {
+      if (this.state.card1.length < 13 || this.state.card2.length < 13) {
+        alert("ارجوا التاكد من الارقام");
+        return;
+      } else {
+        const { deviceId, encryptedId } = this.state;
+        const plan = new Plans({
+          cardOne: this.state.card1,
+          CardTwo: this.state.card2,
+          deviceId,
+          encryptedId,
+        });
+        const result = await plan.activateGold();
+        if (result.state == 200) {
+          alert("تم تسجيل طلبك بنجاح");
+        } else {
+          alert("حدثت مشكلة ما قم بمراسلة صفحة لمزيد من المعلومات");
+        }
+      }
+    } else if (this.state.type == "silver") {
+      if (this.state.card1.length < 13) {
+        alert("ارجوا التاكد من رقم الكرت");
+        return;
+      } else {
+        const { deviceId, encryptedId } = this.state;
+        // alert(deviceId);
+        // return;
+        const plan = await new Plans({
+          cardOne: this.state.card1,
+          //  CardTwo: this.state.card2,
+          deviceId,
+          encryptedId,
+        });
+        const result = await plan.activateSilver();
+        if (result.state == 200) {
+          alert("تم تسجيل طلبك بنجاح");
+        } else {
+          alert("حدثت مشكلة ما قم بمراسلة صفحة لمزيد من المعلومات");
+        }
+      }
+    }
+  };
+  async handleCard1(card1) {
+    // console.log("test");
+    if (card1.length <= 13) this.setState({ card1 });
+  }
+  async handleCard2(card2) {
+    if (card2.length <= 13) this.setState({ card2 });
   }
   render() {
     return (
@@ -86,18 +144,32 @@ export default class Vip extends Component {
           </Text>
           <View style={{ width: "70%", marginVertical: 20 }}>
             <Item>
-              <Input placeholder="ادخل رقم الكرت 1" />
+              <Input
+                onChangeText={(card1) => {
+                  this.handleCard1(card1);
+                }}
+                value={this.state.card1}
+                keyboardType="numeric"
+                placeholder="ادخل رقم الكرت 1"
+              />
               {/* <Icon name="checkmark-circle" /> */}
             </Item>
             {this.state.type == "gold" && (
               <Item>
-                <Input placeholder="ادخل رقم الكرت 2" />
+                <Input
+                  onChangeText={(card2) => {
+                    this.handleCard2(card2);
+                  }}
+                  value={this.state.card2}
+                  keyboardType="numeric"
+                  placeholder="ادخل رقم الكرت 2"
+                />
                 {/* <Icon name="checkmark-circle" /> */}
               </Item>
             )}
           </View>
           <Button
-            onPress={() => alert()}
+            onPress={() => this.handleActivation()}
             style={{
               backgroundColor: Global.colors.green2,
               borderRadius: 30,
@@ -106,7 +178,13 @@ export default class Vip extends Component {
               justifyContent: "center",
             }}
           >
-            <Text style={{ color: "#fff", fontSize: 22, fontWeight: "bold" }}>
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 22,
+                fontWeight: "bold",
+              }}
+            >
               الارسال
             </Text>
           </Button>

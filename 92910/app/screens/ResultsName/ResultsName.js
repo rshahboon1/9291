@@ -15,9 +15,8 @@ import ResultCard from "../../components/ResultCard/ResultCard";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import Plan from "../../components/Plan/Plan";
 import Search from "../../classes/Search/Search";
-import MyAds from "../../components/MyAds/MyAds";
 
-export default class Results extends Component {
+export default class ResultsName extends Component {
   static navigationOptions = {
     headerStyle: {
       // backgroundColor: '#333',
@@ -27,11 +26,8 @@ export default class Results extends Component {
   constructor(props) {
     super(props);
     const {
-      data: {
-        data: { result: results, rest },
-        type,
-      },
-      phone,
+      data: { data, from, next },
+      name,
       deviceId,
       encryptedId,
     } = this.props.navigation.state.params;
@@ -41,35 +37,31 @@ export default class Results extends Component {
     );
     this.state = {
       viewSilver: false,
-      results,
-      phone,
+      data,
+      name,
       deviceId,
       encryptedId,
-      rest,
-      type,
+      from,
+      next,
     };
     // console.log(this.props.navigation.state.params);
   }
   async findMore() {
-    // console.log("find more ", this.state);
-
-    // return;
-
     const search = new Search({
-      phoneNumber: this.state.phone,
+      name: this.state.name,
       deviceId: this.state.deviceId,
       encryptedId: this.state.encryptedId,
     });
-    const res = await search.searchForPhone("phonemorefind");
-    if (res.state == 200) {
-      // console.log(results);
-      // return;
-      const {
-        data: { result: results },
-      } = res;
-      // console.log(results);
-      this.setState({ results, rest: 0 });
+    // console.log(this.state);
+    const names = await search.searchForName(this.state.from);
+    // console.log(names);
+    // return;
+    if (names.state == 200) {
+      const { data, next, from } = names;
+      console.log(next, from, "test  some test");
+      this.setState({ data, next, from });
     } else {
+      alert();
       //TODO handle other sercomstancess
     }
   }
@@ -77,15 +69,7 @@ export default class Results extends Component {
     // const {data: } = this.state.results;
     // console.warn(this.state.type);
   }
-  handleSilver() {
-    // console.log(this.state);
-    if (this.state.type == "") {
-      this.setState({ viewSilver: true });
-    } else {
-      // console.log(this.state.findMore, "000000000000000000000000000");
-      this.findMore();
-    }
-  }
+
   render() {
     return (
       <Container style={{ backgroundColor: Global.colors.bg }}>
@@ -107,20 +91,14 @@ export default class Results extends Component {
           <Right></Right>
         </Header>
         <View style={{ paddingTop: 10 }}>
-          <MyAds theAd={false} />
-          {this.state.results.map(({ name, number }, i) => (
-            <ResultCard
-              key={i}
-              name={name}
-              phone={this.state.phone}
-              repeat={number}
-            />
+          {this.state.data.map(({ name, number }, i) => (
+            <ResultCard key={i} name={name} phone={number} repeat={false} />
           ))}
 
-          {this.state.rest != "0" && (
+          {this.state.next == true && (
             <View style={{ zIndex: 1 }}>
               <Button
-                onPress={(_) => this.handleSilver()}
+                onPress={(_) => this.findMore()}
                 style={{
                   backgroundColor: Global.colors.green2,
                   justifyContent: "center",
@@ -136,7 +114,7 @@ export default class Results extends Component {
                     fontSize: 18,
                   }}
                 >
-                  عرض جميع الاسماء
+                  عرض المجموعة التالية
                 </Text>
               </Button>
             </View>
@@ -159,8 +137,6 @@ export default class Results extends Component {
               close={(_) => this.setState({ viewSilver: false })}
               navigation={this.props.navigation}
               type="silver"
-              deviceId={this.state.deviceId}
-              encryptedId={this.state.encryptedId}
             />
           </View>
         )}

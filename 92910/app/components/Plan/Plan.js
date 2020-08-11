@@ -6,7 +6,7 @@ import Global from "../../../Globals";
 import { Icon, Button } from "native-base";
 
 export default function Plan(props) {
-  const { type } = props;
+  const { type, close, deviceId, encryptedId } = props;
   return (
     <View
       style={{
@@ -22,7 +22,7 @@ export default function Plan(props) {
       }}
     >
       <Button
-        onPress={(_) => alert()}
+        onPress={(_) => close()}
         transparent
         style={{ position: "absolute", left: 5, top: 5 }}
       >
@@ -139,7 +139,9 @@ export default function Plan(props) {
         من عرض جميع الاسماء
       </Text>
       <Button
-        onPress={() => props.navigation.navigate("Vip", { type })}
+        onPress={() =>
+          props.navigation.navigate("Vip", { type, deviceId, encryptedId })
+        }
         style={{
           backgroundColor: Global.colors.green2,
           borderRadius: 30,

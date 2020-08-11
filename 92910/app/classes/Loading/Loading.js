@@ -1,19 +1,29 @@
 import Storage from "../Storage/Storage";
 // import * as Device from "expo-device";
 import DeviceInfo from "react-native-device-info";
+import CryptoJS from "react-native-crypto-js";
+import Encryption from "../Encryption/Encryption";
+import Global from "../../../Globals";
+import Axios from "axios";
 
 export default class Loading {
   constructor({} = {}) {
     this.deviceId = "";
-    this.getDeviceId();
+    this.encryptedId = "";
+    // this.getDeviceId();
     this.userData = {};
     this.userDataTableName = "userData";
     this.Storage = new Storage(this.userDataTableName);
   }
   async getDeviceId() {
     const id = await DeviceInfo.getUniqueId();
-    console.log("getting device id ...", id);
+    const bundleversion = await DeviceInfo.getBuildNumber();
+    const Encrypt = await new Encryption().encrypt(id);
+
+    // console.log("getting device id ...", id);
     this.deviceId = id;
+    this.bundleversion = bundleversion;
+    this.encryptedId = Encrypt;
   }
   async getUserData() {
     const data = await this.Storage.getUserData();
@@ -22,6 +32,10 @@ export default class Loading {
     // this.isFirstTimeUse();
   }
   async isFirstTimeUse() {
+    //DEL
+
+    return true;
+    //DEL
     await this.getUserData();
 
     // console.warn(this.userData.firstTimeUse);
@@ -30,11 +44,58 @@ export default class Loading {
     return this.userData.firstTimeUse;
   }
   async checkUpdate() {
-    return false;
+    const endurl = `/app9291/v1/mobile/appusercontrol`;
+    const url = Global.site.url + Global.site.endPoint + endurl;
+
+    // console.log(this.encryptedId, this.deviceId);
+    // return true;
+
+    const registred = await Axios.post(
+      url,
+      {
+        id: this.deviceId,
+        bundleversion: this.bundleversion,
+      },
+      {
+        headers: {
+          "User-Agent": "app9291 android",
+          Authorization: this.encryptedId,
+        },
+      }
+    )
+      .then((response) => {
+        return response.data;
+        // here will be cheerio scraping
+      })
+      .catch(function (e) {
+        console.log(e);
+        return { state: 201 };
+      });
+    return registred;
   }
   async registerNewUser() {
-    console.log("registring the new user  which id is ...", this.deviceId);
-    return true;
+    const endurl = `/app9291/v1/mobile/registeruser?id=${this.deviceId}`;
+    const url = Global.site.url + Global.site.endPoint + endurl;
+
+    // console.log(this.encryptedId, this.deviceId);
+    // return true;
+
+    const registred = await Axios.get(url, {
+      headers: {
+        "User-Agent": "app9291 android",
+        Authorization: this.encryptedId,
+      },
+    })
+      .then((response) => {
+        return response.data;
+        // here will be cheerio scraping
+      })
+      .catch(function (e) {
+        console.log(e);
+        return { state: 201 };
+      });
+    return registred;
+    // console.warn(registred);
   }
   //   async checkUserRegistred() {
   //     //backend check if user exists
