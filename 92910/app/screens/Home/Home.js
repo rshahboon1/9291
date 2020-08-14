@@ -12,32 +12,45 @@ import {
   Item,
   Input,
 } from "native-base";
+import History from "../History/History";
+import Privacy from "../Privacy/Privacy";
+import Vip from "../Vip/Vip";
+import { connect } from "react-redux";
+
+import Results from "../Results/Results";
+import ResultsName from "../ResultsName/ResultsName";
 import { createStackNavigator } from "react-navigation-stack";
 import Drawer from "react-native-drawer";
 import Contacts from "../../classes/Contacts/Contacts";
 import Globals from "../../../Globals";
-import Results from "../Results/Results";
-import ResultsName from "../ResultsName/ResultsName";
 
-import Vip from "../Vip/Vip";
 import DrawerPannel from "../DrawerPannel/DrawerPannel";
-import History from "../History/History";
-import Privacy from "../Privacy/Privacy";
+
 import Search from "../../classes/Search/Search";
 import Validation from "../../classes/validation/index";
 import DeviceInfo from "react-native-device-info";
 import Encryption from "../../classes/Encryption/Encryption";
 import MyAds from "../../components/MyAds/MyAds";
 import Plan from "../../components/Plan/Plan";
+
 class Home extends Component {
   static navigationOptions = {
     headerStyle: {
-      // backgroundColor: '#333',
+      // backgroundColor: "#333",
       display: "none",
     },
   };
   constructor(props) {
     super(props);
+    const { theAd = {}, noAds = false } = this.props.appData;
+    this.state = {
+      nameSearch: false,
+      phonenumberOrName: "",
+      viewGold: false,
+      theAd,
+      noAds,
+    };
+    // alert(theAd);
   }
   closeControlPanel = () => {
     this._drawer.close();
@@ -45,11 +58,7 @@ class Home extends Component {
   openControlPanel = () => {
     this._drawer.open();
   };
-  state = {
-    nameSearch: false,
-    phonenumberOrName: "",
-    viewGold: false,
-  };
+
   search = async () => {
     !this.state.nameSearch ? this.searchByNumber() : this.searchByName();
   };
@@ -108,6 +117,7 @@ class Home extends Component {
         phone: this.state.phonenumberOrName,
         deviceId: this.state.deviceId,
         encryptedId: this.state.encryptedId,
+        noAds: this.state.noAds,
       });
     } else {
       //TODO handle other sercomstancess
@@ -115,6 +125,10 @@ class Home extends Component {
     }
   }
   async UNSAFE_componentWillMount() {
+    // console.warn(
+    //   this.props.appData,
+    //   "==============================================="
+    // );
     await this.getDeviceId();
     let c = new Contacts();
     // c.getLastTimeContactUpload();
@@ -140,12 +154,18 @@ class Home extends Component {
         side="right"
         ref={(ref) => (this._drawer = ref)}
         type="static"
-        content={<DrawerPannel navigation={this.props.navigation} />}
+        content={
+          <DrawerPannel
+            theAd={this.state.theAd}
+            navigation={this.props.navigation}
+          />
+        }
         tapToClose={true}
         openDrawerOffset={0.3} // 30% gap on the right side of drawer
         panCloseMask={0.3}
         closedDrawerOffset={-3}
         styles={drawerStyles}
+
         // tweenHandler={(ratio) => ({
         //   main: { opacity: (2 - ratio) / 2 },
         // })}
@@ -324,17 +344,20 @@ class Home extends Component {
               />
             </View>
           )}
-          <View
-            style={{
-              paddingBottom: 8,
-              flexDirection: "column",
-              flex: 1,
-              width: "100%",
-              justifyContent: "flex-end",
-            }}
-          >
-            <MyAds theAd={false} />
-          </View>
+
+          {!this.state.noAds && (
+            <View
+              style={{
+                paddingBottom: 8,
+                flexDirection: "column",
+                flex: 1,
+                width: "100%",
+                justifyContent: "flex-end",
+              }}
+            >
+              <MyAds theAd={this.state.theAd} />
+            </View>
+          )}
         </Container>
       </Drawer>
     );
@@ -351,10 +374,19 @@ const drawerStyles = StyleSheet.create({
   },
   main: { paddingLeft: 3 },
 });
+
+const mapStateToProps = (state) => ({
+  appData: state.appReducer.app.appData,
+});
+
+const mapDispatchToProps = (dispatch) => ({});
+
+const connectedHome = connect(mapStateToProps, mapDispatchToProps)(Home);
 const homeStack = createStackNavigator({
   Home: {
-    screen: Home,
+    screen: connectedHome,
   },
+
   Results: {
     screen: Results,
   },

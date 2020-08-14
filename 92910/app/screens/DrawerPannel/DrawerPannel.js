@@ -5,19 +5,7 @@ import History from "../History/History";
 import { createStackNavigator } from "react-navigation-stack";
 import Global from "../../../Globals";
 import logo from "../../assets/logo.png";
-import {
-  Container,
-  Header,
-  Content,
-  Button,
-  ListItem,
-  // Text,
-  Icon,
-  Left,
-  Body,
-  Right,
-  Switch,
-} from "native-base";
+import { Button, Icon } from "native-base";
 
 class DrawerPannel extends Component {
   static navigationOptions = {
@@ -64,7 +52,12 @@ class DrawerPannel extends Component {
           <Button
             transparent
             style={{ justifyContent: "flex-end" }}
-            onPress={(_) => this.props.navigation.navigate("History")}
+            onPress={(_) =>
+              this.props.navigation.navigate("History", {
+                theAd: this.props.theAd,
+                // theAd: {},
+              })
+            }
           >
             <Text style={styles.listBtnTxt}>البحث السابق</Text>
             <Icon

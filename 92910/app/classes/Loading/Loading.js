@@ -32,15 +32,11 @@ export default class Loading {
     // this.isFirstTimeUse();
   }
   async isFirstTimeUse() {
-    //DEL
-
-    return true;
-    //DEL
     await this.getUserData();
 
     // console.warn(this.userData.firstTimeUse);
     // alert(this.userData.firstfTimeUse);
-    // // console.warn(this.userData);
+    console.warn(this.userData);
     return this.userData.firstTimeUse;
   }
   async checkUpdate() {
@@ -77,13 +73,13 @@ export default class Loading {
     const endurl = `/app9291/v1/mobile/registeruser?id=${this.deviceId}`;
     const url = Global.site.url + Global.site.endPoint + endurl;
 
-    // console.log(this.encryptedId, this.deviceId);
+    console.log(url);
     // return true;
 
     const registred = await Axios.get(url, {
       headers: {
-        "User-Agent": "app9291 android",
-        Authorization: this.encryptedId,
+        "user-Agent": "app9291 android",
+        authorization: this.encryptedId,
       },
     })
       .then((response) => {

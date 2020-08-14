@@ -8,6 +8,8 @@ import { createSwitchNavigator, createAppContainer } from "react-navigation";
 
 import HomeScreen from "./app/screens/Home/Home";
 import LandingScreen from "./app/screens/Landing/Landing";
+import { Provider } from "react-redux";
+import Store from "./app/Redux/Store/Store";
 
 export default class App extends Component {
   constructor(props) {
@@ -31,7 +33,9 @@ export default class App extends Component {
     } else {
       return (
         <Root>
-          <AppContainer />
+          <Provider store={Store}>
+            <AppContainer />
+          </Provider>
         </Root>
       );
     }

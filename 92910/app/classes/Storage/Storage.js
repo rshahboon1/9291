@@ -67,7 +67,7 @@ export default class Storage {
     this._storeData("");
   };
   async getFromHistory() {
-    console.log("get from history");
+    // console.log("get from history");
     let data = await this._retrieveData();
     if (data.length > 2) {
       data = JSON.parse(data);
@@ -84,7 +84,7 @@ export default class Storage {
     } else {
       const now = new Date();
       data = {
-        firstTimeUse: false,
+        firstTimeUse: true,
         // deviceId: null,
         // contactsCount: 0,
         // date: now,
@@ -92,5 +92,15 @@ export default class Storage {
     }
     // console.log(data, "history git ");
     return data;
+  }
+  async setUserData({ firstTimeUse } = {}) {
+    //  if (!data) return;
+    let data = await this.getUserData();
+    console.warn(data, "history git ");
+    data.firstTimeUse = firstTimeUse;
+    this._storeData(JSON.stringify(data));
+    // return data;
+    // alert(data.firstTimeUse);
+    // console.warn("object", data);
   }
 }

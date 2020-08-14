@@ -16,7 +16,15 @@ import { TouchableHighlight } from "react-native-gesture-handler";
 import Plan from "../../components/Plan/Plan";
 import Search from "../../classes/Search/Search";
 import MyAds from "../../components/MyAds/MyAds";
+import Globals from "../../../Globals";
 
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+  // PublisherBanner,
+  // AdMobRewarded,
+} from "react-native-admob";
+const Debuging = Globals.app.debuging;
 export default class Results extends Component {
   static navigationOptions = {
     headerStyle: {
@@ -34,11 +42,9 @@ export default class Results extends Component {
       phone,
       deviceId,
       encryptedId,
+      noAds,
     } = this.props.navigation.state.params;
-    console.log(
-      this.props.navigation.state.params.data,
-      "=================================="
-    );
+
     this.state = {
       viewSilver: false,
       results,
@@ -47,8 +53,18 @@ export default class Results extends Component {
       encryptedId,
       rest,
       type,
+      noAds,
     };
+
     // console.log(this.props.navigation.state.params);
+    if (!noAds) {
+      let adunit = Debuging
+        ? "ca-app-pub-3940256099942544/1033173712"
+        : "ca-app-pub-3698961787387868/1589051366";
+      // alert(adunit);
+
+      AdMobInterstitial.setAdUnitID(adunit);
+    }
   }
   async findMore() {
     // console.log("find more ", this.state);
@@ -107,7 +123,7 @@ export default class Results extends Component {
           <Right></Right>
         </Header>
         <View style={{ paddingTop: 10 }}>
-          <MyAds theAd={false} />
+          {!this.state.noAds && <MyAds theAd={false} />}
           {this.state.results.map(({ name, number }, i) => (
             <ResultCard
               key={i}

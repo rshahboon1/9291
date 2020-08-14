@@ -58,9 +58,15 @@ export default class History extends Component {
           <Right style={{ flex: 1 }}></Right>
         </Header>
         <Content padder>
-          <MyAds theAd={false} />
+          <MyAds
+            theAd={
+              this.props.navigation.state.params?.theAd
+                ? this.props.navigation.state.params?.theAd
+                : false
+            }
+          />
           {this.state.history.map(({ name, phone }, key) => {
-            console.log(name);
+            // console.log(name);
             return (
               <ResultCard key={key} name={name} phone={phone} repeat="12" />
             );

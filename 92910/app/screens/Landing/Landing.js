@@ -4,7 +4,18 @@ import ProgressBarAnimated from "react-native-progress-bar-animated";
 import logo from "../../assets/logo.png";
 import Global from "../../../Globals";
 import Loading from "../../classes/Loading/Loading";
-export default class Landing extends Component {
+import { connect } from "react-redux";
+
+import Storage from "../../classes/Storage/Storage";
+import { Button } from "native-base";
+import { TouchableOpacity } from "react-native-gesture-handler";
+class Landing extends Component {
+  static navigationOptions = {
+    headerStyle: {
+      // backgroundColor: '#333',
+      display: "none",
+    },
+  };
   state = {
     progressWithOnComplete: 10,
     barWidth: 300,
@@ -14,20 +25,31 @@ export default class Landing extends Component {
     const ldg = new Loading();
     this.state.loading = ldg;
   }
+  agreeToTerms = (_) => {
+    const storage = new Storage("userData");
+    storage.setUserData({ firstTimeUse: false });
+    this.setState({
+      progressWithOnComplete: this.state.progressWithOnComplete + 10,
+    });
+  };
   async UNSAFE_componentWillMount() {
+    // console.warn(this.props.state);
+    return;
     await this.state.loading.getDeviceId();
     const first = await this.state.loading.isFirstTimeUse();
-    console.log(first);
+    // return;
+    alert(first);
     if (first) {
+      this.setState({ notAgree: true });
       const registred = await this.state.loading.registerNewUser();
       // alert(registred["state"]);
       // console.log(registred);
-      // return;
+      return;
       if (registred.state == 200) {
         // alert();
         // console.log("user registred succussfully ");
         this.setState({
-          progressWithOnComplete: this.state.progressWithOnComplete + 40,
+          progressWithOnComplete: this.state.progressWithOnComplete + 30,
         });
       } else {
         alert("ناسف خطاء رقم 1 , يمكنك محاولة لاحقا");
@@ -52,7 +74,8 @@ export default class Landing extends Component {
         //TODO TAKE APP TO CONSOLE PAGE ON THE NEXT UPDATE
         alert("يحتاج التطبيق الي تحديث ");
       }
-      this.setState({ noAds, theAd });
+      this.props.setAppData({ noAds, theAd });
+      // this.setState({ });
     } else {
       alert("ناسف خطاء رقم 2 , يمكنك محاولة لاحقا");
     }
@@ -69,7 +92,7 @@ export default class Landing extends Component {
       >
         <Image
           source={logo}
-          style={{ width: 200, height: 200, marginBottom: 40 }}
+          style={{ width: 200, height: 200, marginBottom: 40, borderRadius: 8 }}
         />
 
         <ProgressBarAnimated
@@ -88,9 +111,44 @@ export default class Landing extends Component {
           //     this.props.navigation.navigate(this.state.page);
           //   }
           // }}
-          onComplete={() => this.props.navigation.navigate("Home")}
+          onComplete={
+            () => this.props.navigation.navigate("Home")
+            // this.props.navigation.navigate("Home", {
+            //   theAd: this.state.theAd,
+            //   noAds: this.state.noAds,
+            // })
+          }
         />
+        <Button style={{ paddingHorizontal: 30, marginTop: 20 }}>
+          <Text style={{ color: "#fff" }}>Get Started</Text>
+        </Button>
+        <View style={{ backgroundColor: "red" }}>
+          <Text>
+            By clicking "Get Started" if you reside in the EU,EEA or SWiterland
+            you are accept the
+          </Text>
+          <TouchableOpacity>
+            <Text>Terms of Service</Text>
+          </TouchableOpacity>
+          <Text>and if you reside in any other country you accept the</Text>
+          <TouchableOpacity>
+            <Text>Termsof service</Text>
+          </TouchableOpacity>
+
+          <Text>and</Text>
+          <TouchableOpacity style={{ display: "flex" }}>
+            <Text>Privacy Policy</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => ({ state });
+
+const mapDispatchToProps = (dispatch) => ({
+  setAppData: (appData) => dispatch({ type: "setAppData", appData }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Landing);

@@ -13,7 +13,7 @@ export default class MyAds extends Component {
     MyAds._propTypes = value;
   }
   UNSAFE_componentWillMount() {
-    // console.warn(this.props.theAd)
+    // console.warn(this.props.theAd);
   }
 
   render() {

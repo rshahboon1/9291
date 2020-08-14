@@ -33,6 +33,12 @@
   >
     <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="YOUR-APP-URL-HERE"/>
     <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="YOUR-APP-SDK-VERSION-HERE"/>
+     <!-- android:value="ca-app-pub-3698961787387868~8627326334" -->
+     <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            
+            android:value="ca-app-pub-3940256099942544~3347511713"
+            />
     <activity
       android:name=".MainActivity"
       android:label="@string/app_name"
