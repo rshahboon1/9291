@@ -25,26 +25,27 @@ class Landing extends Component {
     const ldg = new Loading();
     this.state.loading = ldg;
   }
-  agreeToTerms = (_) => {
+  agreeToTerms = () => {
     const storage = new Storage("userData");
     storage.setUserData({ firstTimeUse: false });
     this.setState({
       progressWithOnComplete: this.state.progressWithOnComplete + 10,
     });
   };
+
   async UNSAFE_componentWillMount() {
     // console.warn(this.props.state);
-    return;
+    // return;
     await this.state.loading.getDeviceId();
     const first = await this.state.loading.isFirstTimeUse();
     // return;
-    alert(first);
+    // alert(first);
     if (first) {
       this.setState({ notAgree: true });
       const registred = await this.state.loading.registerNewUser();
       // alert(registred["state"]);
       // console.log(registred);
-      return;
+      // return;
       if (registred.state == 200) {
         // alert();
         // console.log("user registred succussfully ");
@@ -119,27 +120,76 @@ class Landing extends Component {
             // })
           }
         />
-        <Button style={{ paddingHorizontal: 30, marginTop: 20 }}>
-          <Text style={{ color: "#fff" }}>Get Started</Text>
-        </Button>
-        <View style={{ backgroundColor: "red" }}>
-          <Text>
-            By clicking "Get Started" if you reside in the EU,EEA or SWiterland
-            you are accept the
-          </Text>
-          <TouchableOpacity>
-            <Text>Terms of Service</Text>
-          </TouchableOpacity>
-          <Text>and if you reside in any other country you accept the</Text>
-          <TouchableOpacity>
-            <Text>Termsof service</Text>
-          </TouchableOpacity>
+        {this.state.notAgree && (
+          <View>
+            <Button
+              onPress={(_) => this.agreeToTerms()}
+              style={{
+                paddingHorizontal: 30,
+                marginTop: 20,
+                // width: "90%",
+                marginHorizontal: 4,
 
-          <Text>and</Text>
-          <TouchableOpacity style={{ display: "flex" }}>
-            <Text>Privacy Policy</Text>
-          </TouchableOpacity>
-        </View>
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: "#fff" }}>Get Started</Text>
+            </Button>
+            <View
+              style={{
+                // backgroundColor: "red",
+
+                paddingHorizontal: 1,
+                marginTop: 50,
+                // display: "flex",
+                // flexDirection: "row",
+                alignContent: "center",
+                justifyContent: "center",
+                alignItems: "center",
+                // alignSelf: "flex-start",
+              }}
+            >
+              <Text style={{ fontSize: 10 }}>
+                By clicking "Get Started" if you reside in the EU,EEA or
+                Switerland you are accept the
+                <Text
+                  style={{
+                    textDecorationLine: "underline",
+                    marginHorizontal: 2,
+                  }}
+                  onPress={(_) => alert("view terms of service")}
+                >
+                  {" "}
+                  Terms of Service
+                </Text>
+              </Text>
+
+              <Text style={{ fontSize: 10 }}>
+                and if you reside in any other country you accept the
+                <Text
+                  style={{
+                    textDecorationLine: "underline",
+                    marginHorizontal: 2,
+                  }}
+                  onPress={(_) => alert("view terms of service")}
+                >
+                  Termsof service
+                </Text>
+                <Text> and</Text>{" "}
+                <Text
+                  style={{
+                    textDecorationLine: "underline",
+                    marginHorizontal: 2,
+                  }}
+                  onPress={(_) => alert("view terms of service")}
+                >
+                  {" "}
+                  Privacy Policy
+                </Text>
+              </Text>
+            </View>
+          </View>
+        )}
       </View>
     );
   }
