@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image, StyleSheet } from "react-native";
+import { Text, View, Image, StyleSheet, Linking } from "react-native";
 // import { Button } from "native-base";
 import History from "../History/History";
 import { createStackNavigator } from "react-navigation-stack";
@@ -14,6 +14,26 @@ class DrawerPannel extends Component {
       display: "none",
     },
   };
+  gotoface() {
+    const url = "https://www.facebook.com/9291-109314614238850/";
+    Linking.canOpenURL("fb://page/109314614238850/").then((supported) => {
+      if (supported) {
+        return Linking.openURL("fb://page/109314614238850/");
+      } else {
+        return Linking.openURL(url);
+      }
+    });
+  }
+  gotoinsta() {
+    const url = "https://www.instagram.com/app_9291/";
+    Linking.canOpenURL("instagram://app_9291/").then((supported) => {
+      if (supported) {
+        return Linking.openURL("instagram://app_9291/");
+      } else {
+        return Linking.openURL(url);
+      }
+    });
+  }
 
   render() {
     return (
@@ -96,7 +116,7 @@ class DrawerPannel extends Component {
           <Button
             transparent
             style={{ justifyContent: "flex-end" }}
-            onPress={(_) => this.props.navigation.navigate("History")}
+            onPress={(_) => this.gotoface()}
           >
             <Text style={styles.listBtnTxt}>فيسبوك</Text>
             <Icon
@@ -109,7 +129,7 @@ class DrawerPannel extends Component {
           <Button
             transparent
             style={{ justifyContent: "flex-end" }}
-            onPress={(_) => this.props.navigation.navigate("History")}
+            onPress={(_) => this.gotoinsta()}
           >
             <Text style={styles.listBtnTxt}>انستقرام</Text>
             <Icon

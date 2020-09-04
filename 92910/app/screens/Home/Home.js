@@ -32,6 +32,7 @@ import DeviceInfo from "react-native-device-info";
 import Encryption from "../../classes/Encryption/Encryption";
 import MyAds from "../../components/MyAds/MyAds";
 import Plan from "../../components/Plan/Plan";
+import { HomeAd } from "../../components/Ads/Ads";
 
 class Home extends Component {
   static navigationOptions = {
@@ -355,6 +356,8 @@ class Home extends Component {
                 justifyContent: "flex-end",
               }}
             >
+              <HomeAd />
+
               <MyAds theAd={this.state.theAd} />
             </View>
           )}

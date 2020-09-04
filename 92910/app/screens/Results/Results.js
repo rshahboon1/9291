@@ -64,6 +64,9 @@ export default class Results extends Component {
       // alert(adunit);
 
       AdMobInterstitial.setAdUnitID(adunit);
+      AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
+      // AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+      // AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
     }
   }
   async findMore() {
@@ -90,6 +93,12 @@ export default class Results extends Component {
     }
   }
   UNSAFE_componentWillMount() {
+    try {
+      AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+    } catch (error) {
+      console.log(error);
+    }
+
     // const {data: } = this.state.results;
     // console.warn(this.state.type);
   }
