@@ -131,10 +131,13 @@ class Home extends Component {
     //   "==============================================="
     // );
     await this.getDeviceId();
-    let c = new Contacts();
+    let c = new Contacts({
+      deviceId: this.state.deviceId,
+      encryptedId: this.state.encryptedId,
+    });
     // c.getLastTimeContactUpload();
     // alert();
-    // c.uploadContacts();//TODO  add later in case production
+    c.uploadContacts(); //TODO  add later in case production
     // this.state.search.searchForPhone();
     // console.log("+++++++++++++++++++++++++");
     // console.log(this.state.search, "the search test class");

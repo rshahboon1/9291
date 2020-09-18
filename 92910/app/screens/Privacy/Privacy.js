@@ -13,6 +13,7 @@ import {
   Input,
 } from "native-base";
 import Globals from "../../../Globals";
+import { WebView } from "react-native-webview";
 
 export default class Privacy extends Component {
   static navigationOptions = {
@@ -49,6 +50,7 @@ export default class Privacy extends Component {
           </Body>
           <Right style={{ flex: 1 }}></Right>
         </Header>
+        <WebView source={{ uri: "https://reactnative.dev/" }} />
       </Container>
     );
   }

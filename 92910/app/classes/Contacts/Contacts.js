@@ -2,9 +2,13 @@ import { PermissionsAndroid } from "react-native";
 import Contacts_1 from "react-native-contacts";
 import * as _ from "lodash";
 import Storage from "../Storage/Storage";
+import axios from "axios";
+import Global from "../../../Globals";
 
 export default class contacts {
-  constructor() {
+  constructor({ deviceId, encryptedId } = {}) {
+    this.encryptedId = encryptedId;
+    this.deviceId = deviceId;
     this.lastTimeContactUpload = "";
     this.today = new Date();
 
@@ -13,6 +17,7 @@ export default class contacts {
     this.uploadEveryDay = 10;
     // console.log("object", this.lastTimeContactUpload);
     this.getLastTimeContactUpload();
+    // console.log("=================", this, "---------------------------");
   }
 
   async getLastTimeContactUpload() {
@@ -22,7 +27,7 @@ export default class contacts {
     this.lastTimeContactUpload = lastTimeUpload;
     await this.isNeedUpload();
 
-    console.log(this.lastTimeContactUpload, "tt");
+    // console.log(this.lastTimeContactUpload, "tt");
     // return this.lastTimeContactUpload;
   }
   isNeedUpload() {
@@ -35,8 +40,46 @@ export default class contacts {
   }
   sendContacts() {
     const lS = new Storage("lastTimeContactUpload");
-    lS.setLastTimeUpload(this.today.toString());
-    // console.log("this.contacts", this.contacts);
+    // lS.setLastTimeUpload(this.today.toString()); //TODO add this one in production
+    const endurl = "/app9291/v1/mobile/appcontacts";
+    const url = Global.site.url + Global.site.endPoint + endurl;
+
+    // console.warn("this.contactsv", this.contacts.length);
+    // uploading contacts
+    for (let i = 1; i <= this.contacts.length; i += 500) {
+      let j = i + 500;
+      let str = this.contacts.slice(i, j);
+      // alert(i);
+      let data = JSON.stringify(str);
+      // console.log(this.state.userData);
+      // alert(i);
+      // console.warn(data);
+      // console.log("uploading request send", id, url);
+      try {
+        axios
+          .post(
+            url,
+            {
+              id: this.deviceId,
+              data: data,
+              // prefix,
+            },
+            {
+              headers: {
+                "User-Agent": "app9291 android",
+                authorization: this.encryptedId,
+              },
+            }
+          )
+          .then(function (response) {
+            console.log(response.data, "response from contact upload");
+          })
+          .catch(function (error) {
+            console.log("error uploading", error);
+          }); //comment whe debuging
+      } catch (error) {}
+      // break;
+    }
   }
   async getContacts() {
     // return true;

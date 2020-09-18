@@ -11,7 +11,7 @@ export default class Encryption {
     const Encrypted = await CryptoJS.AES.encrypt(text, this.key, {
       iv: this.iv,
     }).toString();
-    console.log(Encrypted, "test encrypted");
+    console.log(Encrypted, "test encrypted", text, "the real id");
     return Encrypted;
   }
 }

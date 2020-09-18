@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image, StyleSheet, Linking } from "react-native";
+import { Text, View, Image, StyleSheet, Linking, Share } from "react-native";
 // import { Button } from "native-base";
 import History from "../History/History";
 import { createStackNavigator } from "react-navigation-stack";
@@ -13,6 +13,26 @@ class DrawerPannel extends Component {
       // backgroundColor: '#333',
       display: "none",
     },
+  };
+  onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          "https://play.google.com/store/apps/details?id=com.frawla.phonelookup",
+      });
+      console.log(result);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   };
   gotoface() {
     const url = "https://www.facebook.com/9291-109314614238850/";
@@ -90,7 +110,7 @@ class DrawerPannel extends Component {
           <Button
             transparent
             style={{ justifyContent: "flex-end" }}
-            onPress={(_) => this.props.navigation.navigate("History")}
+            onPress={(_) => this.onShare()}
           >
             <Text style={styles.listBtnTxt}>مشاركة التطبيق</Text>
             <Icon

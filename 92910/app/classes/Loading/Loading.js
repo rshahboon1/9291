@@ -43,7 +43,7 @@ export default class Loading {
     const endurl = `/app9291/v1/mobile/appusercontrol`;
     const url = Global.site.url + Global.site.endPoint + endurl;
 
-    // console.log(this.encryptedId, this.deviceId);
+    console.log(url);
     // return true;
 
     const registred = await Axios.post(

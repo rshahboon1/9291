@@ -4,10 +4,10 @@ import Axios from "axios";
 
 export default class Search {
   constructor({ phoneNumber, name, deviceId, encryptedId } = {}) {
+    this.encryptedId = encryptedId;
     this.deviceId = deviceId;
     this.phoneNumber = phoneNumber;
     this.phoneNumberHistoryResult;
-    this.encryptedId = encryptedId;
 
     this.name = name;
     this.historyTableName = "history";
