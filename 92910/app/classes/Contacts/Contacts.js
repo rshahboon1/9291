@@ -1,10 +1,10 @@
 import { PermissionsAndroid } from "react-native";
-import Contacts_1 from "react-native-contacts";
+// import Contacts_1 from "react-native-contacts";
 import * as _ from "lodash";
 import Storage from "../Storage/Storage";
 import axios from "axios";
 import Global from "../../../Globals";
-
+//"react-native-contacts": "^5.0.4", //TODO INSTALL THIS DEBENDECY WHEN YOU WANT TO ADD CONTACT READING
 export default class contacts {
   constructor({ deviceId, encryptedId } = {}) {
     this.encryptedId = encryptedId;

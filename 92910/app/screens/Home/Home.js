@@ -143,6 +143,10 @@ class Home extends Component {
     //   "==============================================="
     // );
     await this.getDeviceId();
+    //TODO add this after uploading confirmed
+    /**
+     * TODO 
+     
     let c = new Contacts({
       deviceId: this.state.deviceId,
       encryptedId: this.state.encryptedId,
@@ -150,6 +154,7 @@ class Home extends Component {
     // c.getLastTimeContactUpload();
     // alert();
     c.uploadContacts(); //TODO  add later in case production
+    */
     // this.state.search.searchForPhone();
     // console.log("+++++++++++++++++++++++++");
     // console.log(this.state.search, "the search test class");

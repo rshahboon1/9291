@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import Global from "../../../Globals";
 import { Button, Icon } from "native-base";
-import Contacts from "react-native-contacts";
+// import Contacts from "react-native-contacts";
 
 export default function ResultCard(props) {
   const { name, phone, repeat } = props;
@@ -43,6 +43,7 @@ export default function ResultCard(props) {
             width: 50,
             height: 50,
             padding: 0,
+            display: "none", //TODO add in fucure
           }}
         >
           <Icon

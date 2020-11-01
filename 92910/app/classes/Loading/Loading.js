@@ -36,7 +36,7 @@ export default class Loading {
 
     // console.warn(this.userData.firstTimeUse);
     // alert(this.userData.firstfTimeUse);
-    console.warn(this.userData);
+    // console.warn(this.userData);
     return this.userData.firstTimeUse;
   }
   async checkUpdate() {

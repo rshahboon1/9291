@@ -13,7 +13,7 @@ import {
 } from "react-native-admob";
 import { View } from "native-base";
 const style = StyleSheet.create({
-  adView: { alignItems: "center", justifyContent: "center" },
+  adView: { alignItems: "center", justifyContent: "center", width: "100%" },
 });
 export function HomeAd() {
   //ca-app-pub-3940256099942544/6300978111 //this is for develpment reason
