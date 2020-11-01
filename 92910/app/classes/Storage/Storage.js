@@ -63,7 +63,7 @@ export default class Storage {
       this._storeData(JSON.stringify(hisArray));
     }
   }
-  static clearHistory = async () => {
+  clearHistory = async () => {
     this._storeData("");
   };
   async getFromHistory() {

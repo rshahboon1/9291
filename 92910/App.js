@@ -10,6 +10,7 @@ import HomeScreen from "./app/screens/Home/Home";
 import LandingScreen from "./app/screens/Landing/Landing";
 import { Provider } from "react-redux";
 import Store from "./app/Redux/Store/Store";
+import Privacy from "./app/screens/Privacy/Privacy";
 
 export default class App extends Component {
   constructor(props) {
@@ -44,5 +45,6 @@ export default class App extends Component {
 const AppSwitchNavigator = createSwitchNavigator({
   Landing: { screen: LandingScreen },
   Home: { screen: HomeScreen },
+  Privacy: { screen: Privacy },
 });
 const AppContainer = createAppContainer(AppSwitchNavigator);

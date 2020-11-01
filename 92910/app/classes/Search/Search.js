@@ -29,7 +29,7 @@ export default class Search {
     const result = await Axios.get(url, {
       headers: {
         "User-Agent": "app9291 android",
-        Authorization: this.encryptedId,
+        Auth: this.encryptedId,
       },
     })
       .then((response) => {
@@ -68,7 +68,7 @@ export default class Search {
     const result = await Axios.get(url, {
       headers: {
         "User-Agent": "app9291 android",
-        Authorization: this.encryptedId,
+        auth: this.encryptedId,
       },
     })
       .then((response) => {

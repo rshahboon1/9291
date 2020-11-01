@@ -10,6 +10,7 @@ import {
   Icon,
   Title,
   Item,
+  Spinner,
   Input,
 } from "native-base";
 import History from "../History/History";
@@ -50,6 +51,7 @@ class Home extends Component {
       viewGold: false,
       theAd,
       noAds,
+      isSearching: false,
     };
     // alert(theAd);
   }
@@ -61,11 +63,12 @@ class Home extends Component {
   };
 
   search = async () => {
+    if (this.state.isSearching) return;
     !this.state.nameSearch ? this.searchByNumber() : this.searchByName();
   };
   async searchByName() {
     if (this.state.phonenumberOrName == "") return;
-
+    this.setState({ isSearching: true });
     const search = new Search({
       name: this.state.phonenumberOrName,
       deviceId: this.state.deviceId,
@@ -73,6 +76,8 @@ class Home extends Component {
     });
     const names = await search.searchForName();
     if (names.state == 200) {
+      this.setState({ isSearching: false });
+
       // console.log(names);
       // return;
       this.props.navigation.navigate("ResultsName", {
@@ -82,6 +87,8 @@ class Home extends Component {
         encryptedId: this.state.encryptedId,
       });
     } else {
+      this.setState({ isSearching: false });
+
       if (names.state == 403) {
         this.setState({ viewGold: true });
         //TODO handle other sercomstancess
@@ -105,6 +112,7 @@ class Home extends Component {
       alert("ارجوا التأكد من الرقم");
       return;
     }
+    this.setState({ isSearching: true });
 
     const search = new Search({
       phoneNumber: this.state.phonenumberOrName,
@@ -113,6 +121,8 @@ class Home extends Component {
     });
     const Results = await search.searchForPhone(more);
     if (Results.state == 200) {
+      this.setState({ isSearching: false });
+
       this.props.navigation.navigate("Results", {
         data: Results,
         phone: this.state.phonenumberOrName,
@@ -121,6 +131,8 @@ class Home extends Component {
         noAds: this.state.noAds,
       });
     } else {
+      this.setState({ isSearching: false });
+
       //TODO handle other sercomstancess
       alert("نأسف لم نتمكن من العثور علي نتائج");
     }
@@ -143,6 +155,8 @@ class Home extends Component {
     // console.log(this.state.search, "the search test class");
   }
   async handleChange(phonenumberOrName) {
+    if (this.state.isSearching) this.setState({ isSearching: false });
+
     if (!this.state.nameSearch) {
       if (phonenumberOrName.length != 11) this.setState({ phonenumberOrName });
       if (Validation.rightPhoneNumber(phonenumberOrName)) {
@@ -327,6 +341,7 @@ class Home extends Component {
               {/* <Icon name="ios-people" /> */}
             </Item>
           </Header>
+          {this.state.isSearching && <Spinner color="red" />}
           {this.state.viewGold && (
             <View
               style={{

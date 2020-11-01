@@ -9,6 +9,7 @@ import {
   Right,
   Button,
   Icon,
+  Spinner,
 } from "native-base";
 import Global from "../../../Globals";
 import ResultCard from "../../components/ResultCard/ResultCard";
@@ -43,10 +44,13 @@ export default class ResultsName extends Component {
       encryptedId,
       from,
       next,
+      isSearching: false,
     };
     // console.log(this.props.navigation.state.params);
   }
   async findMore() {
+    if (this.state.isSearching) return;
+    this.setState({ isSearching: true });
     const search = new Search({
       name: this.state.name,
       deviceId: this.state.deviceId,
@@ -57,11 +61,15 @@ export default class ResultsName extends Component {
     // console.log(names);
     // return;
     if (names.state == 200) {
+      this.setState({ isSearching: false });
+
       const { data, next, from } = names;
       console.log(next, from, "test  some test");
       this.setState({ data, next, from });
     } else {
-      alert();
+      this.setState({ isSearching: false });
+
+      // alert();
       //TODO handle other sercomstancess
     }
   }
@@ -120,7 +128,7 @@ export default class ResultsName extends Component {
             </View>
           )}
         </View>
-
+        {this.state.isSearching && <Spinner color="red" />}
         {this.state.viewSilver && (
           <View
             style={{

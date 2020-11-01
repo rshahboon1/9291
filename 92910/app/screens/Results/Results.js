@@ -12,7 +12,7 @@ import {
 } from "native-base";
 import Global from "../../../Globals";
 import ResultCard from "../../components/ResultCard/ResultCard";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import { TouchableHighlight, ScrollView } from "react-native-gesture-handler";
 import Plan from "../../components/Plan/Plan";
 import Search from "../../classes/Search/Search";
 import MyAds from "../../components/MyAds/MyAds";
@@ -94,7 +94,9 @@ export default class Results extends Component {
   }
   UNSAFE_componentWillMount() {
     try {
-      AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+      if (!this.state.noAds) {
+        AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());
+      }
     } catch (error) {
       console.log(error);
     }
@@ -131,7 +133,7 @@ export default class Results extends Component {
           </Body>
           <Right></Right>
         </Header>
-        <View style={{ paddingTop: 10 }}>
+        <ScrollView style={{ paddingTop: 10 }}>
           {!this.state.noAds && <MyAds theAd={false} />}
           {this.state.results.map(({ name, number }, i) => (
             <ResultCard
@@ -166,7 +168,7 @@ export default class Results extends Component {
               </Button>
             </View>
           )}
-        </View>
+        </ScrollView>
 
         {this.state.viewSilver && (
           <View

@@ -17,6 +17,7 @@ import Globals from "../../../Globals";
 import ResultCard from "../../components/ResultCard/ResultCard";
 import Storage from "../../classes/Storage/Storage";
 import MyAds from "../../components/MyAds/MyAds";
+import { ScrollView } from "react-native-gesture-handler";
 export default class History extends Component {
   static navigationOptions = {
     headerStyle: {
@@ -28,11 +29,20 @@ export default class History extends Component {
     history: [],
   };
   async UNSAFE_componentWillMount() {
+    // this.nameInput.focus();
+
     const lS = new Storage("history");
     const history = await lS.getFromHistory();
     // this.state.history = data;
     this.setState({ history });
+    // console.log(history);
+    // alert(123);
   }
+  clearHistory = () => {
+    const lS = new Storage("history");
+    lS.clearHistory();
+    this.setState({ history: [] });
+  };
   render() {
     return (
       <Container style={{ backgroundColor: Globals.colors.bg }}>
@@ -57,7 +67,12 @@ export default class History extends Component {
           </Body>
           <Right style={{ flex: 1 }}></Right>
         </Header>
-        <Content padder>
+
+        <ScrollView
+          padder
+          style={{ flex: 1, paddingHorizontal: 8, marginVertical: 8 }}
+        >
+          {/* <Title>البحث السابق</Title> */}
           <MyAds
             theAd={
               this.props.navigation.state.params?.theAd
@@ -65,13 +80,24 @@ export default class History extends Component {
                 : false
             }
           />
+
           {this.state.history.map(({ name, phone }, key) => {
             // console.log(name);
-            return (
-              <ResultCard key={key} name={name} phone={phone} repeat="12" />
-            );
+
+            return <ResultCard key={key} name={name} phone={phone} />;
           })}
-        </Content>
+          {this.state.history.length > 0 && (
+            <Button
+              block
+              danger
+              style={{ marginVertical: 4 }}
+              // transparent
+              onPress={(_) => this.clearHistory()}
+            >
+              <Icon name="trash" />
+            </Button>
+          )}
+        </ScrollView>
       </Container>
     );
   }

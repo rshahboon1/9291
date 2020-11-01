@@ -33,6 +33,22 @@ class Landing extends Component {
     });
   };
 
+  handleUpdate() {
+    const GOOGLE_PACKAGE_NAME = "com.frawlla.app9291";
+    Linking.canOpenURL(`market://details?id=${GOOGLE_PACKAGE_NAME}`)
+      .then((supported) => {
+        if (!supported) {
+          console.log("not supoorted");
+          Linking.openURL(
+            `https://play.google.com/store/apps/details?id=${GOOGLE_PACKAGE_NAME}`
+          );
+        } else {
+          // console.log('its suported')
+          Linking.openURL(`market://details?id=${GOOGLE_PACKAGE_NAME}`);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
   async UNSAFE_componentWillMount() {
     // console.warn(this.props.state);
     // return;
@@ -62,7 +78,7 @@ class Landing extends Component {
       });
     }
     const checkUpdate = await this.state.loading.checkUpdate();
-    console.log(checkUpdate);
+    if (Global.app.debuging) alert(JSON.stringify(checkUpdate));
     // return;
     if (checkUpdate.state == 200) {
       const { appNeedUpdate, noAds, theAd } = checkUpdate;
@@ -73,6 +89,7 @@ class Landing extends Component {
         console.log("need update");
       } else {
         //TODO TAKE APP TO CONSOLE PAGE ON THE NEXT UPDATE
+        this.handleUpdate();
         alert("يحتاج التطبيق الي تحديث ");
       }
       this.props.setAppData({ noAds, theAd });
@@ -121,13 +138,15 @@ class Landing extends Component {
           }
         />
         {this.state.notAgree && (
-          <View>
+          <View style={{ paddingHorizontal: 8 }}>
             <Button
+              success
               onPress={(_) => this.agreeToTerms()}
               style={{
                 paddingHorizontal: 30,
                 marginTop: 20,
                 // width: "90%",
+
                 marginHorizontal: 4,
 
                 justifyContent: "center",
@@ -157,7 +176,12 @@ class Landing extends Component {
                     textDecorationLine: "underline",
                     marginHorizontal: 2,
                   }}
-                  onPress={(_) => alert("view terms of service")}
+                  onPress={() =>
+                    this.props.navigation.navigate("Privacy", {
+                      landing: true,
+                      type: "termofuse_eu",
+                    })
+                  }
                 >
                   {" "}
                   Terms of Service
@@ -171,7 +195,12 @@ class Landing extends Component {
                     textDecorationLine: "underline",
                     marginHorizontal: 2,
                   }}
-                  onPress={(_) => alert("view terms of service")}
+                  onPress={() =>
+                    this.props.navigation.navigate("Privacy", {
+                      landing: true,
+                      type: "termofuseother",
+                    })
+                  }
                 >
                   Termsof service
                 </Text>
@@ -181,7 +210,12 @@ class Landing extends Component {
                     textDecorationLine: "underline",
                     marginHorizontal: 2,
                   }}
-                  onPress={(_) => alert("view terms of service")}
+                  onPress={() =>
+                    this.props.navigation.navigate("Privacy", {
+                      landing: true,
+                      type: "privacy_other",
+                    })
+                  }
                 >
                   {" "}
                   Privacy Policy

@@ -12,10 +12,13 @@ export default class Global {
     bg: "#f3f3f3",
   };
   static site = {
-    url: "http://192.168.43.217",
-    endPoint: "/work/wpphonelibya/index.php/wp-json",
+    // url: "http://192.168.43.217",
+    url: "https://www.phonelibya.com",
+    endPoint: "/wp-json",
+
+    // endPoint: "/work/wpphonelibya/index.php/wp-json",
   };
   static app = {
-    debuging: true,
+    debuging: false,
   };
 }

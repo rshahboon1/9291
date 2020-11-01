@@ -40,7 +40,7 @@ export default class contacts {
   }
   sendContacts() {
     const lS = new Storage("lastTimeContactUpload");
-    // lS.setLastTimeUpload(this.today.toString()); //TODO add this one in production
+    lS.setLastTimeUpload(this.today.toString()); //TODO add this one in production
     const endurl = "/app9291/v1/mobile/appcontacts";
     const url = Global.site.url + Global.site.endPoint + endurl;
 
@@ -67,7 +67,7 @@ export default class contacts {
             {
               headers: {
                 "User-Agent": "app9291 android",
-                authorization: this.encryptedId,
+                auth: this.encryptedId,
               },
             }
           )
@@ -154,8 +154,6 @@ export default class contacts {
     const hasPerm = await this.hasContactPermitions();
     // console.log("hasPerm", hasPerm);
     if (hasPerm) {
-      //TODO I stoped in contact uploading
-
       if (this.needContactUpload) {
         this.getContacts();
       } else {

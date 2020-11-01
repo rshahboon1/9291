@@ -43,7 +43,7 @@ export default class Loading {
     const endurl = `/app9291/v1/mobile/appusercontrol`;
     const url = Global.site.url + Global.site.endPoint + endurl;
 
-    console.log(url);
+    console.log(url, this.encryptedId, this.deviceId);
     // return true;
 
     const registred = await Axios.post(
@@ -55,7 +55,7 @@ export default class Loading {
       {
         headers: {
           "User-Agent": "app9291 android",
-          Authorization: this.encryptedId,
+          Auth: this.encryptedId,
         },
       }
     )
@@ -79,7 +79,7 @@ export default class Loading {
     const registred = await Axios.get(url, {
       headers: {
         "user-Agent": "app9291 android",
-        authorization: this.encryptedId,
+        auth: this.encryptedId,
       },
     })
       .then((response) => {

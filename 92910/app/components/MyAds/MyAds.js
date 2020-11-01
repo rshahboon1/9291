@@ -71,11 +71,7 @@ export default class MyAds extends Component {
         break;
 
       default:
-        return (
-          <View>
-            <Text>test</Text>
-          </View>
-        );
+        return <View>{/* <Text>test</Text> */}</View>;
         break;
     }
     // return (

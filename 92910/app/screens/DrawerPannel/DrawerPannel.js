@@ -18,7 +18,7 @@ class DrawerPannel extends Component {
     try {
       const result = await Share.share({
         message:
-          "https://play.google.com/store/apps/details?id=com.frawla.phonelookup",
+          "https://play.google.com/store/apps/details?id=com.frawlla.app9291",
       });
       console.log(result);
       if (result.action === Share.sharedAction) {
@@ -80,7 +80,7 @@ class DrawerPannel extends Component {
               borderRadius: 8,
             }}
           />
-          <Text>كاش الأرقام 9291</Text>
+          <Text>كاشف الأرقام 9291</Text>
         </View>
         <View
           style={{
@@ -123,7 +123,12 @@ class DrawerPannel extends Component {
           <Button
             transparent
             style={{ justifyContent: "flex-end" }}
-            onPress={(_) => this.props.navigation.navigate("Privacy")}
+            onPress={(_) =>
+              this.props.navigation.navigate("Privacy", {
+                landing: false,
+                type: "termofuseother",
+              })
+            }
           >
             <Text style={styles.listBtnTxt}>شروط الاستخدام</Text>
             <Icon

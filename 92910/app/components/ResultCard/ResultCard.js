@@ -31,6 +31,7 @@ export default function ResultCard(props) {
         justifyContent: "space-between",
         flexDirection: "row",
         marginBottom: 4,
+        overflow: "hidden",
       }}
     >
       <View>
